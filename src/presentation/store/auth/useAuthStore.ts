@@ -22,6 +22,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       return false;
     }
     //Todo: Guardar el token en un storage persistente
+    console.log({ resp });
     set({ status: 'authenticated', token: resp.token, user: resp.user });
     return true;
   },
