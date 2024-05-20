@@ -1,8 +1,13 @@
 import {Button, Input, Layout, Text} from '@ui-kitten/components';
 import {useWindowDimensions} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
+import {MyIcon} from '../../components';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootStackParams} from '../../navigation/StackNavigator';
 
-export const LoginScreen = () => {
+interface Props extends StackScreenProps<RootStackParams, 'LoginScreen'> {}
+
+export const LoginScreen = ({navigation}: Props) => {
   const {height} = useWindowDimensions();
 
   return (
@@ -20,6 +25,7 @@ export const LoginScreen = () => {
             placeholder="Correo electrónico"
             keyboardType="email-address"
             autoCapitalize="none"
+            accessoryLeft={<MyIcon name="email-outline" />}
           />
 
           <Input
@@ -27,14 +33,16 @@ export const LoginScreen = () => {
             placeholder="Contraseña"
             secureTextEntry
             autoCapitalize="none"
+            accessoryLeft={<MyIcon name="lock-outline" />}
           />
 
           {/* Space */}
-          <Layout style={{height: 20}} />
+          <Layout style={{height: 10}} />
 
           {/* Botón */}
           <Layout>
             <Button
+              accessoryRight={<MyIcon name="arrow-forward-outline" white />}
               onPress={() => {}}
               // appearance="ghost"
             >
@@ -52,7 +60,10 @@ export const LoginScreen = () => {
                 justifyContent: 'center',
               }}>
               <Text>¿No tienes cuenta?</Text>
-              <Text status="primary" category="s1" onPress={() => {}}>
+              <Text
+                status="primary"
+                category="s1"
+                onPress={() => navigation.navigate('RegisterScreen')}>
                 {' '}
                 Crea una
               </Text>
