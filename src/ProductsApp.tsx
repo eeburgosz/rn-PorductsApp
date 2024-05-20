@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
-import {NavigationContainer} from '@react-navigation/native';
-import {StackNavigator} from './presentation/navigation/StackNavigator';
+import { NavigationContainer } from '@react-navigation/native';
+import { StackNavigator } from './presentation/navigation/StackNavigator';
 
 import {
   ApplicationProvider,
@@ -9,8 +9,9 @@ import {
   Text,
 } from '@ui-kitten/components';
 import * as eva from '@eva-design/eva';
-import {useColorScheme} from 'react-native';
-import {EvaIconsPack} from '@ui-kitten/eva-icons';
+import { useColorScheme } from 'react-native';
+import { EvaIconsPack } from '@ui-kitten/eva-icons';
+import { AuthProvider } from './presentation/providers/AuthProvider';
 
 export const ProductsApp = () => {
   const colorScheme = useColorScheme(); //! Tema del Sistema Operativo
@@ -37,7 +38,9 @@ export const ProductsApp = () => {
               notification: theme['color-primary-500'],
             },
           }}>
-          <StackNavigator />
+          <AuthProvider>
+            <StackNavigator />
+          </AuthProvider>
         </NavigationContainer>
       </ApplicationProvider>
     </>

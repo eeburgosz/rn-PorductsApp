@@ -15,12 +15,12 @@ export type RootStackParams = {
   LoadingScreen: undefined;
   RegisterScreen: undefined;
   LoginScreen: undefined;
-  ProductScreen: {productId: string};
+  ProductScreen: { productId: string };
 };
 
 const Stack = createStackNavigator<RootStackParams>();
 
-const fadeAnimation: StackCardStyleInterpolator = ({current}) => {
+const fadeAnimation: StackCardStyleInterpolator = ({ current }) => {
   return {
     cardStyle: {
       opacity: current.progress,
@@ -31,28 +31,28 @@ const fadeAnimation: StackCardStyleInterpolator = ({current}) => {
 export const StackNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName="LoginScreen"
+      initialRouteName="LoadingScreen"
       screenOptions={{
         headerShown: false,
         // cardStyleInterpolator: fadeAnimation, //! Para aplicar de manera global
       }}>
       <Stack.Screen
-        options={{cardStyleInterpolator: fadeAnimation}}
+        options={{ cardStyleInterpolator: fadeAnimation }}
         name="LoadingScreen"
         component={LoadingScreen}
       />
       <Stack.Screen
-        options={{cardStyleInterpolator: fadeAnimation}}
+        options={{ cardStyleInterpolator: fadeAnimation }}
         name="LoginScreen"
         component={LoginScreen}
       />
       <Stack.Screen
-        options={{cardStyleInterpolator: fadeAnimation}}
+        options={{ cardStyleInterpolator: fadeAnimation }}
         name="RegisterScreen"
         component={RegisterScreen}
       />
       <Stack.Screen
-        options={{cardStyleInterpolator: fadeAnimation}}
+        options={{ cardStyleInterpolator: fadeAnimation }}
         name="HomeScreen"
         component={HomeScreen}
       />
