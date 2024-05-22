@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { tesloApi } from '../../config';
+import { tesloApi } from '../../config/api';
 import { User } from '../../domain/entities';
 import type { AuthResponse } from '../../infrastructure/interfaces';
 

@@ -1,6 +1,7 @@
 import { Button, Icon, Layout, Text } from '@ui-kitten/components';
 import React from 'react';
 import { useAuthStore } from '../../store';
+import { getProductsByPage } from '../../../actions';
 
 export const HomeScreen = () => {
   const { logout } = useAuthStore();
