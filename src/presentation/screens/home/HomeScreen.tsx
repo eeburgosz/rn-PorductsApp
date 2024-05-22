@@ -1,6 +1,7 @@
 import { Layout, Text } from '@ui-kitten/components';
 import { getProductsByPage } from '../../../actions';
 import { useQuery } from '@tanstack/react-query';
+import { MainLayout } from '../../layouts';
 
 export const HomeScreen = () => {
   const { isLoading, data: products = [] } = useQuery({
@@ -10,8 +11,8 @@ export const HomeScreen = () => {
   });
 
   return (
-    <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>{JSON.stringify(products, null, 3)}</Text>
-    </Layout>
+    <MainLayout title="TesloShop Products" subTitle="Aplicación administrativa">
+      <Text>Hola mundo</Text>
+    </MainLayout>
   );
 };
