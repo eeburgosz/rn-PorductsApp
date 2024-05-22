@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { tesloApi } from '../../config';
 import { User } from '../../domain/entities';
 import type { AuthResponse } from '../../infrastructure/interfaces';
@@ -33,6 +34,24 @@ export const authLogin = async (email: string, password: string) => {
 export const authCheckStatus = async () => {
   try {
     const { data } = await tesloApi.get<AuthResponse>('/auth/check-status');
+    return returnUserToken(data);
+  } catch (error) {
+    console.log({ error });
+    return null;
+  }
+};
+
+export const authRegister = async (
+  fullName: string,
+  email: string,
+  password: string,
+) => {
+  try {
+    const { data } = await tesloApi.post<AuthResponse>('/auth/register', {
+      fullName,
+      email,
+      password,
+    });
     return returnUserToken(data);
   } catch (error) {
     console.log({ error });

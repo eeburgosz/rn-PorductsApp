@@ -10,6 +10,7 @@ import { useAuthStore } from '../../store';
 interface Props extends StackScreenProps<RootStackParams, 'LoginScreen'> {}
 
 export const LoginScreen = ({ navigation }: Props) => {
+  const { height } = useWindowDimensions();
   const { login } = useAuthStore();
 
   const [isPosting, setIsPosting] = useState(false);
@@ -18,7 +19,6 @@ export const LoginScreen = ({ navigation }: Props) => {
     email: '',
     password: '',
   });
-  const { height } = useWindowDimensions();
 
   const onLogin = async () => {
     if (form.email.length === 0 || form.password.length === 0) return;
