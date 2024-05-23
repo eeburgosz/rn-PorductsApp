@@ -18,7 +18,7 @@ interface Props {
   rightActionIcon?: string;
 
   //! En código limpio, se prioriza la composición sobre la herencia, por eso el children lo declaro así
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export const MainLayout = ({

@@ -14,7 +14,6 @@ export const HomeScreen = () => {
     staleTime: 1000 * 60 * 60,
     initialPageParam: 0,
     queryFn: async params => {
-      console.log(params);
       const products = await getProductsByPage(params.pageParam);
       return products;
     },
