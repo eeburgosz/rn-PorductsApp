@@ -5,12 +5,25 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../../navigation/StackNavigator';
 import { useRef } from 'react';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
-import { Input, Layout } from '@ui-kitten/components';
-import { FadeInImage } from '../../components';
+import {
+  Button,
+  ButtonGroup,
+  Input,
+  Layout,
+  Text,
+  useTheme,
+} from '@ui-kitten/components';
+import { FadeInImage, MyIcon } from '../../components';
+import { Gender, Size } from '../../../domain/entities';
+
+const sizes: Size[] = [Size.Xs, Size.S, Size.M, Size.L, Size.Xl, Size.Xxl];
+const genders: Gender[] = [Gender.Kid, Gender.Men, Gender.Women];
 
 interface Props extends StackScreenProps<RootStackParams, 'ProductScreen'> {}
 
 export const ProductScreen = ({ route }: Props) => {
+  const theme = useTheme();
+
   // const { productId } = route.params;
   //! Es mejor dejar una referencia al ID porque esta misma pantalla la voy a usar para otras acciones.
   const productIdRef = useRef(route.params.productId);
@@ -46,6 +59,7 @@ export const ProductScreen = ({ route }: Props) => {
             )}
           />
         </Layout>
+
         {/* Formulario */}
         <Layout style={{ marginHorizontal: 10 }}>
           <Input
@@ -66,6 +80,8 @@ export const ProductScreen = ({ route }: Props) => {
             style={{ marginVertical: 5 }}
           />
         </Layout>
+
+        {/* Precio e inventario */}
         <Layout
           style={{
             marginVertical: 5,
@@ -84,6 +100,57 @@ export const ProductScreen = ({ route }: Props) => {
             style={{ flex: 1 }}
           />
         </Layout>
+
+        {/* Selectores */}
+        <ButtonGroup
+          size="small"
+          appearance="outline"
+          style={{
+            margin: 2,
+            marginHorizontal: 15,
+            marginTop: 20,
+          }}>
+          {sizes.map(size => (
+            <Button
+              style={{
+                flex: 1,
+                backgroundColor: true ? theme['color-primary-200'] : undefined,
+              }}
+              key={size}>
+              {size}
+            </Button>
+          ))}
+        </ButtonGroup>
+        <ButtonGroup
+          size="small"
+          appearance="outline"
+          style={{
+            margin: 2,
+            marginHorizontal: 15,
+            marginTop: 20,
+          }}>
+          {genders.map(gender => (
+            <Button
+              style={{
+                flex: 1,
+                backgroundColor: true ? theme['color-primary-200'] : undefined,
+              }}
+              key={gender}>
+              {gender}
+            </Button>
+          ))}
+        </ButtonGroup>
+
+        {/* Botón para guardar */}
+
+        <Button
+          onPress={() => {}}
+          style={{ margin: 15 }}
+          accessoryLeft={<MyIcon name="save-outline" white />}>
+          Guardar
+        </Button>
+
+        <Text>{JSON.stringify(product, null, 3)}</Text>
 
         <Layout style={{ height: 200 }} />
       </ScrollView>

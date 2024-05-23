@@ -1,5 +1,5 @@
-import {Icon, useTheme} from '@ui-kitten/components';
-import {StyleSheet} from 'react-native';
+import { Icon, useTheme } from '@ui-kitten/components';
+import { StyleSheet } from 'react-native';
 
 interface Props {
   name: string;
@@ -7,7 +7,7 @@ interface Props {
   white?: boolean;
 }
 
-export const MyIcon = ({name, color, white = false}: Props) => {
+export const MyIcon = ({ name, color, white = false }: Props) => {
   const theme = useTheme();
   //   console.log(theme['color-primary-400']);
   if (white) {
@@ -23,7 +23,7 @@ export const MyIcon = ({name, color, white = false}: Props) => {
 
 const styles = StyleSheet.create({
   icon: {
-    width: 32,
-    height: 32,
+    width: 30,
+    height: 30,
   },
 });
