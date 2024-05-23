@@ -15,6 +15,7 @@ import {
 } from '@ui-kitten/components';
 import { FadeInImage, MyIcon } from '../../components';
 import { Gender, Size } from '../../../domain/entities';
+import { Formik } from 'formik';
 
 const sizes: Size[] = [Size.Xs, Size.S, Size.M, Size.L, Size.Xl, Size.Xxl];
 const genders: Gender[] = [Gender.Kid, Gender.Men, Gender.Women];
@@ -41,119 +42,144 @@ export const ProductScreen = ({ route }: Props) => {
   }
 
   return (
-    <MainLayout title={product.title} subTitle={`Precio: ${product.price}`}>
-      <ScrollView style={{ flex: 1 }}>
-        {/* Imágenes del producto */}
-        {/* Todo: Tener en consideración cuando no hay imágenes  */}
-        <Layout>
-          <FlatList
-            data={product.images}
-            keyExtractor={item => item}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            renderItem={({ item }) => (
-              <FadeInImage
-                uri={item}
-                style={{ width: 300, height: 300, marginHorizontal: 7 }}
+    <Formik initialValues={product} onSubmit={() => console.log('Submit')}>
+      {/* Esta es la parte "más complicada" de Formik en esta implementación */}
+      {/* Hago todos los inputs y selectores, envuelvo todo el contenido dentro del Formik y luego pongo ese contenido dentro de un fallback para poder desestructurar sus propiedades. */}
+      {/* <Formik>{ ({})=>(Contenido) }</Formik> */}
+      {({ handleChange, handleSubmit, values, errors, setFieldValue }) => (
+        <MainLayout title={values.title} subTitle={`Precio: ${values.price}`}>
+          <ScrollView style={{ flex: 1 }}>
+            {/* Imágenes del producto */}
+            {/* Todo: Tener en consideración cuando no hay imágenes  */}
+            <Layout>
+              <FlatList
+                data={values.images}
+                keyExtractor={item => item}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item }) => (
+                  <FadeInImage
+                    uri={item}
+                    style={{ width: 300, height: 300, marginHorizontal: 7 }}
+                  />
+                )}
               />
-            )}
-          />
-        </Layout>
+            </Layout>
 
-        {/* Formulario */}
-        <Layout style={{ marginHorizontal: 10 }}>
-          <Input
-            label="Titulo"
-            value={product.title}
-            style={{ marginVertical: 5 }}
-          />
-          <Input
-            label="Slug"
-            value={product.slug}
-            style={{ marginVertical: 5 }}
-          />
-          <Input
-            label="Descripción"
-            value={product.description}
-            multiline
-            numberOfLines={5}
-            style={{ marginVertical: 5 }}
-          />
-        </Layout>
+            {/* Formulario */}
+            <Layout style={{ marginHorizontal: 10 }}>
+              <Input
+                label="Titulo"
+                style={{ marginVertical: 5 }}
+                value={values.title}
+                onChangeText={handleChange('title')}
+              />
+              <Input
+                label="Slug"
+                style={{ marginVertical: 5 }}
+                value={values.slug}
+                onChangeText={handleChange('slug')}
+              />
+              <Input
+                label="Descripción"
+                multiline
+                numberOfLines={5}
+                style={{ marginVertical: 5 }}
+                value={values.description}
+                onChangeText={handleChange('description')}
+              />
+            </Layout>
 
-        {/* Precio e inventario */}
-        <Layout
-          style={{
-            marginVertical: 5,
-            marginHorizontal: 15,
-            flexDirection: 'row',
-            gap: 10,
-          }}>
-          <Input
-            label="Precio"
-            value={product.price.toString()}
-            style={{ flex: 1 }}
-          />
-          <Input
-            label="Inventario"
-            value={product.stock.toString()}
-            style={{ flex: 1 }}
-          />
-        </Layout>
-
-        {/* Selectores */}
-        <ButtonGroup
-          size="small"
-          appearance="outline"
-          style={{
-            margin: 2,
-            marginHorizontal: 15,
-            marginTop: 20,
-          }}>
-          {sizes.map(size => (
-            <Button
+            {/* Precio e inventario */}
+            <Layout
               style={{
-                flex: 1,
-                backgroundColor: true ? theme['color-primary-200'] : undefined,
-              }}
-              key={size}>
-              {size}
-            </Button>
-          ))}
-        </ButtonGroup>
-        <ButtonGroup
-          size="small"
-          appearance="outline"
-          style={{
-            margin: 2,
-            marginHorizontal: 15,
-            marginTop: 20,
-          }}>
-          {genders.map(gender => (
-            <Button
+                marginVertical: 5,
+                marginHorizontal: 15,
+                flexDirection: 'row',
+                gap: 10,
+              }}>
+              <Input
+                label="Precio"
+                style={{ flex: 1 }}
+                value={values.price.toString()}
+                onChangeText={handleChange('price')}
+              />
+              <Input
+                label="Inventario"
+                style={{ flex: 1 }}
+                value={values.stock.toString()}
+                onChangeText={handleChange('stock')}
+              />
+            </Layout>
+
+            {/* Selectores */}
+            <ButtonGroup
+              size="small"
+              appearance="outline"
               style={{
-                flex: 1,
-                backgroundColor: true ? theme['color-primary-200'] : undefined,
-              }}
-              key={gender}>
-              {gender}
+                margin: 2,
+                marginHorizontal: 15,
+                marginTop: 20,
+              }}>
+              {sizes.map(size => (
+                <Button
+                  onPress={() =>
+                    setFieldValue(
+                      'sizes',
+                      values.sizes.includes(size)
+                        ? values.sizes.filter(s => s !== size)
+                        : [...values.sizes, size],
+                    )
+                  }
+                  style={{
+                    flex: 1,
+                    backgroundColor: values.sizes.includes(size)
+                      ? theme['color-primary-200']
+                      : undefined,
+                  }}
+                  key={size}>
+                  {size}
+                </Button>
+              ))}
+            </ButtonGroup>
+            <ButtonGroup
+              size="small"
+              appearance="outline"
+              style={{
+                margin: 2,
+                marginHorizontal: 15,
+                marginTop: 20,
+              }}>
+              {genders.map(gender => (
+                <Button
+                  onPress={() => setFieldValue('gender', gender)}
+                  style={{
+                    flex: 1,
+                    backgroundColor: values.gender.startsWith(gender)
+                      ? theme['color-primary-200']
+                      : undefined,
+                  }}
+                  key={gender}>
+                  {gender}
+                </Button>
+              ))}
+            </ButtonGroup>
+
+            {/* Botón para guardar */}
+
+            <Button
+              onPress={() => {}}
+              style={{ margin: 15 }}
+              accessoryLeft={<MyIcon name="save-outline" white />}>
+              Guardar
             </Button>
-          ))}
-        </ButtonGroup>
 
-        {/* Botón para guardar */}
+            <Text>{JSON.stringify(values, null, 3)}</Text>
 
-        <Button
-          onPress={() => {}}
-          style={{ margin: 15 }}
-          accessoryLeft={<MyIcon name="save-outline" white />}>
-          Guardar
-        </Button>
-
-        <Text>{JSON.stringify(product, null, 3)}</Text>
-
-        <Layout style={{ height: 200 }} />
-      </ScrollView>
-    </MainLayout>
+            <Layout style={{ height: 200 }} />
+          </ScrollView>
+        </MainLayout>
+      )}
+    </Formik>
   );
 };
