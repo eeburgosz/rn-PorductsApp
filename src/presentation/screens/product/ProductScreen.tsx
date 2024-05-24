@@ -1,6 +1,6 @@
 import { MainLayout } from '../../layouts';
-import { useQuery } from '@tanstack/react-query';
-import { getProductById } from '../../../actions';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { getProductById, updateCreateProduct } from '../../../actions';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../../navigation/StackNavigator';
 import { useRef } from 'react';
@@ -14,7 +14,7 @@ import {
   useTheme,
 } from '@ui-kitten/components';
 import { FadeInImage, MyIcon } from '../../components';
-import { Gender, Size } from '../../../domain/entities';
+import { Gender, Product, Size } from '../../../domain/entities';
 import { Formik } from 'formik';
 
 const sizes: Size[] = [Size.Xs, Size.S, Size.M, Size.L, Size.Xl, Size.Xxl];
@@ -33,16 +33,28 @@ export const ProductScreen = ({ route }: Props) => {
   const { data: product } = useQuery({
     queryKey: ['product', productIdRef.current],
     queryFn: () => getProductById(productIdRef.current),
-    staleTime: 1000 * 60 * 60,
+    // staleTime: 1000 * 60 * 60,
   });
 
   //useMutation
+  const mutation = useMutation({
+    mutationFn: (data: Product) =>
+      updateCreateProduct({ ...data, id: productIdRef.current }),
+    onSuccess(data: Product) {
+      console.log('onSuccess');
+      console.log({ data });
+    },
+  });
+
   if (!product) {
     return <MainLayout title="Cargando..."></MainLayout>;
   }
 
   return (
-    <Formik initialValues={product} onSubmit={() => console.log('Submit')}>
+    <Formik
+      initialValues={product}
+      // onSubmit={values => mutation.mutate(values)}
+      onSubmit={mutation.mutate}>
       {/* Esta es la parte "más complicada" de Formik en esta implementación */}
       {/* Hago todos los inputs y selectores, envuelvo todo el contenido dentro del Formik y luego pongo ese contenido dentro de un fallback para poder desestructurar sus propiedades. */}
       {/* <Formik>{ ({})=>(Contenido) }</Formik> */}
@@ -100,12 +112,14 @@ export const ProductScreen = ({ route }: Props) => {
               }}>
               <Input
                 label="Precio"
+                keyboardType="numeric"
                 style={{ flex: 1 }}
                 value={values.price.toString()}
                 onChangeText={handleChange('price')}
               />
               <Input
                 label="Inventario"
+                keyboardType="numeric"
                 style={{ flex: 1 }}
                 value={values.stock.toString()}
                 onChangeText={handleChange('stock')}
@@ -168,7 +182,8 @@ export const ProductScreen = ({ route }: Props) => {
             {/* Botón para guardar */}
 
             <Button
-              onPress={() => {}}
+              onPress={() => handleSubmit()}
+              disabled={mutation.isPending}
               style={{ margin: 15 }}
               accessoryLeft={<MyIcon name="save-outline" white />}>
               Guardar
