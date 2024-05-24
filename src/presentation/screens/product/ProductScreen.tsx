@@ -1,5 +1,5 @@
 import { MainLayout } from '../../layouts';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getProductById, updateCreateProduct } from '../../../actions';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../../navigation/StackNavigator';
@@ -24,6 +24,7 @@ interface Props extends StackScreenProps<RootStackParams, 'ProductScreen'> {}
 
 export const ProductScreen = ({ route }: Props) => {
   const theme = useTheme();
+  const queryClient = useQueryClient();
 
   // const { productId } = route.params;
   //! Es mejor dejar una referencia al ID porque esta misma pantalla la voy a usar para otras acciones.
@@ -41,8 +42,12 @@ export const ProductScreen = ({ route }: Props) => {
     mutationFn: (data: Product) =>
       updateCreateProduct({ ...data, id: productIdRef.current }),
     onSuccess(data: Product) {
-      console.log('onSuccess');
-      console.log({ data });
+      // console.log('onSuccess');
+      // console.log({ data });
+      productIdRef.current = data.id; //* Creación.
+      //! Esto invalida los queries anteriores y me trae la data actualizada
+      queryClient.invalidateQueries({ queryKey: ['products', 'infinite'] }); //! HomeScreen
+      // queryClient.invalidateQueries({ queryKey: ['product', data.id] }); //! O el productId.current de esta Screen (opcional)
     },
   });
 
