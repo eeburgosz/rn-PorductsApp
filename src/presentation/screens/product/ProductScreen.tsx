@@ -16,6 +16,7 @@ import {
 import { FadeInImage, MyIcon } from '../../components';
 import { Gender, Product, Size } from '../../../domain/entities';
 import { Formik } from 'formik';
+import { Image } from 'react-native';
 
 const sizes: Size[] = [Size.Xs, Size.S, Size.M, Size.L, Size.Xl, Size.Xxl];
 const genders: Gender[] = [Gender.Kid, Gender.Men, Gender.Women];
@@ -68,19 +69,35 @@ export const ProductScreen = ({ route }: Props) => {
           <ScrollView style={{ flex: 1 }}>
             {/* Imágenes del producto */}
             {/* Todo: Tener en consideración cuando no hay imágenes  */}
-            <Layout>
-              <FlatList
-                data={values.images}
-                keyExtractor={item => item}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                renderItem={({ item }) => (
-                  <FadeInImage
-                    uri={item}
-                    style={{ width: 300, height: 300, marginHorizontal: 7 }}
-                  />
-                )}
-              />
+            <Layout
+              style={{
+                marginVertical: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              {values.images.length === 0 ? (
+                <Image
+                  style={{
+                    width: 300,
+                    height: 300,
+                    marginHorizontal: 7,
+                  }}
+                  source={require('../../../assets/no-product-image.png')}
+                />
+              ) : (
+                <FlatList
+                  data={values.images}
+                  keyExtractor={item => item}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  renderItem={({ item }) => (
+                    <FadeInImage
+                      uri={item}
+                      style={{ width: 300, height: 300, marginHorizontal: 7 }}
+                    />
+                  )}
+                />
+              )}
             </Layout>
 
             {/* Formulario */}
