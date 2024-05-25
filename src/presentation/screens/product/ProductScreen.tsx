@@ -1,22 +1,22 @@
-import { MainLayout } from '../../layouts';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getProductById, updateCreateProduct } from '../../../actions';
-import { StackScreenProps } from '@react-navigation/stack';
-import { RootStackParams } from '../../navigation/StackNavigator';
 import { useRef } from 'react';
+import { Image } from 'react-native';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
+import { StackScreenProps } from '@react-navigation/stack';
 import {
   Button,
   ButtonGroup,
   Input,
   Layout,
-  Text,
   useTheme,
 } from '@ui-kitten/components';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Formik } from 'formik';
+import { RootStackParams } from '../../navigation/StackNavigator';
+import { MainLayout } from '../../layouts';
+import { getProductById, updateCreateProduct } from '../../../actions';
 import { FadeInImage, MyIcon } from '../../components';
 import { Gender, Product, Size } from '../../../domain/entities';
-import { Formik } from 'formik';
-import { Image } from 'react-native';
+import { CameraAdapter } from '../../../config/adapters';
 
 const sizes: Size[] = [Size.Xs, Size.S, Size.M, Size.L, Size.Xl, Size.Xxl];
 const genders: Gender[] = [Gender.Kid, Gender.Men, Gender.Women];
@@ -65,7 +65,15 @@ export const ProductScreen = ({ route }: Props) => {
       {/* Hago todos los inputs y selectores, envuelvo todo el contenido dentro del Formik y luego pongo ese contenido dentro de un fallback para poder desestructurar sus propiedades. */}
       {/* <Formik>{ ({})=>(Contenido) }</Formik> */}
       {({ handleChange, handleSubmit, values, errors, setFieldValue }) => (
-        <MainLayout title={values.title} subTitle={`Precio: ${values.price}`}>
+        <MainLayout
+          title={values.title}
+          subTitle={`Precio: ${values.price}`}
+          rightAction={async () => {
+            const photos = await CameraAdapter.takePicture();
+            console.log({ photos });
+            setFieldValue('images', [...values.images, ...photos]);
+          }}
+          rightActionIcon="camera-outline">
           <ScrollView style={{ flex: 1 }}>
             {/* Imágenes del producto */}
             {/* Todo: Tener en consideración cuando no hay imágenes  */}
@@ -210,9 +218,6 @@ export const ProductScreen = ({ route }: Props) => {
               accessoryLeft={<MyIcon name="save-outline" white />}>
               Guardar
             </Button>
-
-            <Text>{JSON.stringify(values, null, 3)}</Text>
-
             <Layout style={{ height: 200 }} />
           </ScrollView>
         </MainLayout>
